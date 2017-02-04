@@ -1,0 +1,40 @@
+
+编译参考1
+
+来自
+
+https://my.oschina.net/mickelfeng/blog/151635
+
+--------------------------------------------------
+
+
+在Windows下编译iconv
+收藏
+mickelfeng
+
+    发表于 3年前 阅读 2028 收藏 3 点赞 1 评论 0 
+
+开程序员的淘宝店！寻找开源技术服务伙伴！>>> ?  
+
+iconv基于GPL公开源代码，是GNU项目的一部分，在各种Unix-like操作系统下很容易编译和使用，而在Windows下编译iconv就没那么简单了。
+
+最新版的iconv（目前是libiconv-1.14.tar.gz）已经不再提供Visual C++的编译文件，最后一个支持VC编译的iconv版本是libiconv-1.11.1.tar.gz。虽然不是最新版，但是在Windows下编译，只好将就了，功能应该差不了多少。
+
+下载libiconv-1.11.1.tar.gz并解压，打开命令提示行，进入libiconv-1.11.1目录，输入命令：
+
+    nmake -f Makefile.msvc NO_NLS=1 MFLAGS=-MD
+    nmake -f Makefile.msvc NO_NLS=1 MFLAGS=-MD PREFIX=C:\iconv install
+
+等待编译结束后就能在C:\iconv找到相应的头文件和库文件了。
+
+    C:\iconv\bin>iconv.exe --version
+    iconv (GNU libiconv 1.11)
+    Copyright (C) 2000-2006 Free Software Foundation, Inc.
+    This is free software; see the source for copying conditions.  There is NO
+    warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    Written by Bruno Haible.
+
+原文地址：http://demon.tw/software/compile-iconv-in-windows.html
+
+    分类：C、C++ 字数：236 
+

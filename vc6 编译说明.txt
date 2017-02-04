@@ -1,0 +1,38 @@
+
+vc6 编译说明
+
+主要参考 "编译参考1.txt" 不过有些要特别注意的.
+
+源码版本为 libiconv-1.11.1, 更高的版本用 vc6 编译不了. 不过 windows平台下使用 iconv 也只是为了兼容一下代码,
+完善的转换 windows 本身就有,直接用就行.所以也不是太有必要升级到最新的版本.实际应用中最好再封装一层转换函数,
+以便在有无 iconv 的情况下自由切换.
+
+网上找来的那篇文章中只说了以下两个命令,其实是不够的:
+
+nmake -f Makefile.msvc NO_NLS=1 MFLAGS=-MD
+nmake -f Makefile.msvc NO_NLS=1 MFLAGS=-MD PREFIX=C:\iconv instal
+
+
+1.首先在装有多个版本 vc 的机器上要先打开 cmd,执行 vc6 的环境脚本,如 C:\Program Files (x86)\Microsoft Visual Studio\VC98\Bin\VCVARS32.BAT
+否则是不太可能成功的.
+
+2.NO_NLS=1 表示不使用 gettext 的国际化多语言提示(确实没必要,还要带各个语言包文件).
+  MFLAGS=-MD 表示使用多线程安全库.
+  第二行应该只是复制文件,在 windows 上其实并不是必须的.
+
+3.因为我们要编译的是 dll 动态库的,所以还要加别的参数,所以实际的命令是:
+
+nmake -f Makefile.msvc NO_NLS=1 MFLAGS=-MD DLL=1
+
+因为编译过程中尝试过建立 dsp 项目文档,但因 makefile 的相互引用太多而没成功.这时候再执行以上命令是不会成功的,要清空,清空时在 vc 环境
+下是不会成功的,必须要使用以下命令:
+
+nmake -f Makefile.msvc NO_NLS=1 MFLAGS=-MD DLL=1 clean
+
+估计在某些环境下还不一定会成功,那就要手工清理下原来生成的新文件,或者是重新取一份完整的新代码.
+
+4.如果出现错误
+[Linker Error] undefined reference to `_imp__libiconv_open'
+
+这是引用错了 iconv.lib ,这在编译后的 src 和 lib 目录下都有,应该要使用 lib 目录下的.
+
